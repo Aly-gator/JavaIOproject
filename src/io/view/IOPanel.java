@@ -20,6 +20,7 @@ public class IOPanel extends JPanel
 	private JLabel rulesLabel;
 	private JLabel rankingLabel;
 	private JLabel titleLabel;
+	private JLabel gameCountLabel;
 	private SpringLayout baseLayout;
 
 	public IOPanel(IOController baseController)
@@ -34,8 +35,11 @@ public class IOPanel extends JPanel
 		rankingLabel = new JLabel("Game Ranking");
 		rulesArea = new JTextArea(5, 20);
 		rulesLabel = new JLabel("Gamerules:");
-		gameCountlabel = new JLabel("current game count:");
+		gameCountLabel = new JLabel("current game count:");
 		baseLayout = new SpringLayout();
+		loadButton = new JButton("LOad here");
+		baseLayout.putConstraint(SpringLayout.NORTH, loadButton, 0, SpringLayout.NORTH, saveButton);
+		baseLayout.putConstraint(SpringLayout.EAST, loadButton, 0, SpringLayout.EAST, rulesArea);
 
 		setupPanel();
 		setupLayout();
@@ -96,62 +100,43 @@ public class IOPanel extends JPanel
 	{
 		saveButton.addActionListener(new ActionListener()
 		{
-
+			
 			public void actionPerformed(ActionEvent click)
 			{
-				Game tempGame = baseController.makeGameFromInput(
-						titleField.getText(), rankingField.getText(),
-						rulesArea.getText());
+				Game tempGame = baseController.makeGameFromInput(titleField.getText(), rankingField.getText(), rulesArea.getText());
 				if (tempGame != null)
 				{
 					baseController.saveGameInformation(tempGame);
-					gameCountLabel.setText("Current game: " + baseController.getProject().size());
+					gameCountLabel.setText("Current game count: " + baseController.getProjectGames().size());
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,
-							"Try again with a valid number");
+					JOptionPane.showMessageDialog(null, "Try again with a valid number");
 				}
 			}
 		});
 		
-		private void setupListeners()
-		
-		{
-			saveButton.addActionListener(new ActionListener()
-			
-			loadButton.addActionListener(new ActionListener()
-		
+		loadButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent click)
 			{
-				
-			}
-			{
 				Game tempGame = baseController.readGameInformation();
-				if (tempGame != null)
+				if( tempGame !=null)
 				{
 					titleField.setText(tempGame.getGameTitle());
-					rankingField.setText(Integer.toString(tempGame
-							.getFunRanking()));
+					rankingField.setText(Integer.toString(tempGame.getFunRanking()));
 					String tempRules = "";
-					for (String currentRule : tempGame.getGameRules())
+					for(String currentRule : tempGame.getGameRules() )
 					{
 						tempRules += currentRule + "\n";
 					}
 					rulesArea.setText(tempRules);
-
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null,
-							"Check the save file make sure it is in order.");
+					JOptionPane.showMessageDialog(null, "Check the save file make sure it is in order.");
 				}
-
 			}
-
 		});
-		
-		loadButton.addActionListener(new ActionListener()
 	}
 }

@@ -35,7 +35,7 @@ public class IOController
 	}
 	public Game readGameInformation()
 	{
-		String fileName = "Save file.txt";
+		String fileName = "savefile.txt";
 		File currentSaveFile = new File(fileName);
 		Scanner fileReader;
 		Game currentGame = null;
@@ -75,6 +75,35 @@ public class IOController
 	return currentGame;
 	}
 	
+	private String readAllGameInformation()
+	{
+		String fileContents = "";
+		String fileName = "save file.txt";
+		File currentSaveFile = new File(fileName);
+		Scanner fileReader;
+		
+		try
+		{
+			fileReader = new Scanner(currentSaveFile);
+			while(fileReader.hasNext())
+			{
+				fileContents += fileReader.nextLine();
+			}
+			fileReader.close();
+		}
+		catch(FileNotFoundException fileDoesNotExist)
+		{
+			JOptionPane.showMessageDialog(appFrame, fileDoesNotExist.getMessage());
+		}
+		
+		return fileContents;
+	}
+	
+	public ArrayList<Game> getProjectGames()
+	{
+		return projectGames;
+	}
+
 	private void convertTextToGames(String currentInfo)
 	{
 		String [] gameChunks = currentInfo.split(";");
@@ -95,7 +124,7 @@ public class IOController
 	{
 		Game currentGame = null;
 		
-		String AllInfo = readAllInfoGameInformation();
+		String AllInfo = readAllGameInformation();
 		convertTextToGames(AllInfo);
 		int randomIndex = (int) (Math.random() * (double) projectGames.size());
 		currentGame = projectGames.get(randomIndex);
